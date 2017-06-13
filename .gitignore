@@ -1,5 +1,5 @@
 #viartual env
-.env/*
+*.env/*
 
 #pyc
 *pyc
