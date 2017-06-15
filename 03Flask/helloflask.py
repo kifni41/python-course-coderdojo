@@ -81,7 +81,6 @@ def waktusholat() :
 		row = data.find_all('tr','table_highlight')
 		#print(row)
 		cols = row[0].find_all('td')
-		maghrib  = ''
 		jadwal = {'imsak':None,'subuh':None,'dzuhur':None,'ashar':None,'maghrib':None,'isya':None}
 		for idx, val in enumerate(cols) :
 			#print(idx)
@@ -98,10 +97,7 @@ def waktusholat() :
 				jadwal['maghrib'] = val.get_text()
 			elif(idx == 6) :
 				jadwal['isya'] = val.get_text()			
-
-			if(idx == 6) :
-				maghrib = val
-		return json.dumps(jadwal,sort_keys=True)
+		return json.dumps(jadwal)
 	else :
 		return 'Unable to get data from website'
 
