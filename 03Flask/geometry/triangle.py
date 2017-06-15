@@ -6,7 +6,7 @@ class Triangle :
 	#Class variable, public to triangle class
 	COUNT = 0
 
-	def __init__(self, bottom, height) :
+	def __init_(_self, bottom, height) :
 		self.name = 'Triangle'
 		self.bottom = bottom
 		self.height = height

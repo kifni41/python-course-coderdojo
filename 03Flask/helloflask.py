@@ -4,6 +4,8 @@ import json
 import geometry.triangle as gtriangle
 import geometry.square as gsquare
 import geometry.circle as gcircle
+import requests
+import bs4
 
 application = Flask(__name__)
 
@@ -65,6 +67,43 @@ def circle() :
 	area = c1.calc_area()
 	obj = {"radius":radius, "area":area}
 	return json.dumps(obj)
+
+@application.route('/waktusholat')
+def waktusholat() :
+	url = 'http://jadwalsholat.pkpu.or.id/monthly.php?id=308'
+	r = requests.get(url)
+
+	if r.status_code == 200 :
+		#print(r.text)
+		data = bs4.BeautifulSoup(r.content,'lxml')
+		#print(data)
+		#find table_highlight class
+		row = data.find_all('tr','table_highlight')
+		#print(row)
+		cols = row[0].find_all('td')
+		maghrib  = ''
+		jadwal = {'imsak':None,'subuh':None,'dzuhur':None,'ashar':None,'maghrib':None,'isya':None}
+		for idx, val in enumerate(cols) :
+			#print(idx)
+			#print(val)
+			if(idx == 1) :
+				jadwal['imsak'] = val.get_text()
+			elif(idx == 2) :
+				jadwal['subuh'] = val.get_text()			
+			elif(idx == 3) :
+				jadwal['dzuhur'] = val.get_text()
+			elif(idx == 4) :
+				jadwal['ashar'] = val.get_text()			
+			elif(idx == 5) :
+				jadwal['maghrib'] = val.get_text()
+			elif(idx == 6) :
+				jadwal['isya'] = val.get_text()			
+
+			if(idx == 6) :
+				maghrib = val
+		return json.dumps(jadwal,sort_keys=True)
+	else :
+		return 'Unable to get data from website'
 
 def isInt(val) :
 	try:
